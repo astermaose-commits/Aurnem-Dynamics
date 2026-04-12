@@ -1,8 +1,16 @@
 import express from 'express';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
+
+// Servir archivos estáticos del frontend (dist)
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // 1. Interrogación de Variables Nativas (Zero Dependencies)
 const apiKey = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
@@ -91,6 +99,11 @@ Responde al siguiente problema empresarial diagnosticando ineficiencias operativ
       res.status(500).json({ error: "ERROR DE CONEXIÓN CON EL NÚCLEO." });
     }
   });
+
+// Catch-all route para enviar el index.html de React en cualquier otra ruta (SPA routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 // Arranque del microservicio
 const PORT = process.env.PORT || 3002;

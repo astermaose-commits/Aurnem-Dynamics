@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "server": "node --env-file=.env server.js",
+    "start": "node server.js",
     "start-full": "node start.js",
     "lint": "tsc --noEmit"
   },
